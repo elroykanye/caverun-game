@@ -1,0 +1,7 @@
+[requires]
+glib/2.78.3
+gtk/system
+
+[generators]
+CMakeDeps
+CMakeToolchain
