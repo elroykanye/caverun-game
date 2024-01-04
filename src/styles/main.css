@@ -1,0 +1,36 @@
+.btn {
+    margin: 2px;
+}
+.normal-btn {
+    background-color: antiquewhite;
+}
+
+.poison-btn {
+    background-color: rgba(61, 192, 61, 0.661);
+}
+
+.trap-btn {
+    background-color: rgba(219, 46, 46, 0.599);
+}
+
+.bonus-btn {
+    background-color: #3535c9be;
+}
+
+
+.player-indicator {
+    color:  black;
+}
+
+.monster-indicator {
+    color: black;
+}
+
+.message {
+    padding: 12px;
+    text-align: center;
+}
+.message-danger { background-color: red; }
+.message-succes { background-color: green; }
+.message-primary { background-color: blue; }
+.message-warn { background-color: orange; }
