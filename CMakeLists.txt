@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(escapegame CXX)
+project(caverun CXX)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0>=2.78.3)

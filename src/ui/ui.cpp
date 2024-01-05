@@ -1,4 +1,4 @@
-#include "ui.h"
+#include "ui.hpp"
 
 using namespace std;
 
@@ -12,17 +12,15 @@ UI::UI(GtkApplication *application, int rows, int cols) {
     gridCols = cols;
 }
 UI::~UI() {
-    delete player;
-    delete monster;
-    delete map;
+    destroy();
 }
 
 void UI::init() {
     gtk_init();
 
     mainWindow = gtk_application_window_new(app);
-    gtk_window_set_title(GTK_WINDOW(mainWindow), "Escape Game");
-    gtk_window_set_default_size(GTK_WINDOW(mainWindow), 640, 480);
+    gtk_window_set_title(GTK_WINDOW(mainWindow), "Cave Escape");
+    gtk_window_set_default_size(GTK_WINDOW(mainWindow), 1024, 720);
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "./src/styles/main.css");
@@ -57,11 +55,14 @@ void UI::init() {
     bottomBarBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
     gtk_box_append(GTK_BOX(mainBox), bottomBarBox);
 
-    messageLabel = gtk_label_new("Welcome to Escape!");
-    gtk_widget_add_css_class(messageLabel, "message");
+    messageLabel = gtk_label_new("Welcome to Escape! Try to run if you can.. hehe!");
+    gtk_widget_add_css_class(bottomBarBox, "message");
+    gtk_widget_add_css_class(topBarBox, "message");
     gtk_box_append(GTK_BOX(bottomBarBox), messageLabel);
 
     gtk_window_present(GTK_WINDOW(mainWindow));
+
+    gtk_widget_add_css_class(mainBox, "main");
 }
 
 void UI::refresh() {
@@ -96,7 +97,7 @@ void UI::refresh() {
                 roomButtonClass = "normal-btn";
             }
 
-            if (room->isVisited()) {
+            if (room->isVisited() || player->isDone()) {
                 gtk_widget_add_css_class(button, roomButtonClass.c_str());
             } else {
                 gtk_widget_add_css_class(button, "normal-btn");
@@ -107,13 +108,19 @@ void UI::refresh() {
             gtk_widget_remove_css_class(button, "monster-indicator");
             gtk_button_set_label(GTK_BUTTON(button), "");
 
-            if (this->player->getPosition().equals(room->getPosition())) {
+            if (this->player->getPosition() == room->getPosition()) {
                 gtk_button_set_label(GTK_BUTTON(button), "P");
-                gtk_widget_add_css_class(button, "player-indicator");
             }
-            if (this->monster->getPosition().equals(room->getPosition())) {
+            if (this->monster->getPosition() == room->getPosition()) {
                 gtk_button_set_label(GTK_BUTTON(button), "M");
-                gtk_widget_add_css_class(button, "monster-indicator");
+            }
+            if (*exit == room->getPosition()) {
+                if (this->monster->getPosition() == *exit) {
+                    gtk_button_set_label(GTK_BUTTON(button), "Exit\nM");
+                } else {
+                    gtk_button_set_label(GTK_BUTTON(button), "Exit");
+                }
+                gtk_widget_add_css_class(button, "exit-btn");
             }
 
             gtk_label_set_text(GTK_LABEL(healthLabel), player->getHealthLabel().c_str());
@@ -125,6 +132,7 @@ void UI::refresh() {
             gtk_widget_set_hexpand(button, TRUE);
             gtk_widget_set_vexpand(button, TRUE);
 
+
             if (initial) {
                 GameContext* gameContext = new GameContext{room, player};
                 g_signal_connect(button, "clicked", G_CALLBACK(+[](GtkWidget* widget, gpointer data){
@@ -133,7 +141,6 @@ void UI::refresh() {
                         context->player->setNextPosition(context->room->getPosition());
                 }), gameContext);
             }
-           
         }
     }
 }
@@ -152,9 +159,9 @@ void UI::display(string message, Severity severity = Severity::PRIMARY) {
         case WARN: newClass = "warn"; break;
         default: break;
     }
-    gtk_widget_add_css_class(messageLabel, ("message" + newClass).c_str());
+    gtk_widget_add_css_class(bottomBarBox, ("message-" + newClass).c_str());
 }
 
 void UI::destroy() {
-
+    
 }

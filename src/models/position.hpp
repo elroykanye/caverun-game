@@ -18,6 +18,8 @@ class Position {
         Position();
         Position(int x, int y, int rows);
         Position(const Vect &vect, int rows);
+
+        // copy constructor
         Position(const Position& other);
         ~Position();
         void setX(int x);
@@ -28,10 +30,13 @@ class Position {
         bool isOrigin();
         void update(const Direction &direction);
         void display();
-        bool equals(const Position &other);
+        bool operator==(const Position &other) const;
+        bool operator!=(const Position &other) const;
         double distance(const Position &other) const;
         Direction getDirectionTo(const Position &other);
+        // gets the adjacents positions to the current position on the grid
         vector<Position> getAdjacents(int maxX, int maxY) const;
+        // get the shortest adjacent position to the given position
         Position getShortestAdjacentTo(const Position &other, int maxX, int maxY) const;
 
     private:

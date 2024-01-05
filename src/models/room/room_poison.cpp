@@ -1,8 +1,8 @@
 #include "room_poison.hpp"
 
 PoisonRoom::PoisonRoom() {
-    int moves = 1 + rand() % 6;
-    int value = (int) (1 + rand() % 8) * 2;
+    int moves = 1 + rand() % 10;
+    int value = (int) (1 + rand() % 8);
     this->damage = { moves, value, DamageType::POISON };
 }
 
@@ -10,6 +10,7 @@ bool PoisonRoom::isPoison() const { return true; }
 RoomVisit PoisonRoom::visit(Player &player) {
     Room::visit(player);
     if (player.isPoisoned()) {
+        player.updateHealth(player.damage.value * -1);
         player.damage.moves += damage.moves;
         player.damage.value = damage.value;
     } else player.damage = damage;

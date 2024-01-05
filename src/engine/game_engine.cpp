@@ -26,6 +26,7 @@ void GameEngine::render(GtkApplication *app) {
     this->ui->map = this->roomSys->getMap();
     this->ui->player = &player;
     this->ui->monster = &monster;
+    this->ui->exit = &exit;
     this->ui->init();
 }
 
@@ -36,8 +37,9 @@ void GameEngine::launch() {
         int maxY = rows - 1;
         Position currPlayerPosition = player.getPosition();
         while (true) {
-            if (player.getPosition().equals(exit)) {
-                this->ui->display("GAME WON - you survived", Severity::PRIMARY);
+            if (player.getPosition() == exit) {
+                string moves = to_string(player.getTotalMoves());
+                this->ui->display("GAME WON - you survived in " + moves + " moves!" , Severity::PRIMARY);
                 break;
             }
 
@@ -45,7 +47,7 @@ void GameEngine::launch() {
                 this->ui->display("GAME LOST - you died", Severity::DANGER);
                 break;
             }
-            if (player.getPosition().equals(monster.getPosition())) {
+            if (player.getPosition() == monster.getPosition()) {
                 this->ui->display("GAME LOST - you were eaten yo", Severity::DANGER);
                 break;
             }
@@ -57,7 +59,7 @@ void GameEngine::launch() {
 
                 this->ui->refresh();
             }
-            if (!player.getPosition().equals(player.getNextPosition()) && player.getMoves() > 0) {
+            if (player.getPosition() != player.getNextPosition() && player.getMoves() > 0) {
                 // before effects of the move
                 if (player.isPoisoned()) {
                     if (player.damage.moves > 0) {
@@ -68,18 +70,24 @@ void GameEngine::launch() {
                 // end before effects
 
                 Position playerMove = player.sense(player.getNextPosition(), maxX, maxY);
-                player.move(playerMove);
+                if (player.getPosition() != playerMove) {
+                    player.move(playerMove);
 
-                // after effects of the move
-                Room* currRoom = this->ui->map->getRoom(playerMove);
-               
-                RoomVisit visit = currRoom->visit(player);
-                this->ui->display(visit.message, visit.result);
-                // end after effects
+                    // after effects of the move
+                    Room* currRoom = this->ui->map->getRoom(playerMove);
+                
+                    RoomVisit visit = currRoom->visit(player);
+                    this->ui->display(visit.message, visit.result);
+                    // end after effects
 
-                this->ui->refresh();
+                    this->ui->refresh();
+                }
             }
         }
+
+        this_thread::sleep_for(chrono::seconds(1));
+        player.setDone(true);
+        this->ui->refresh();
     };
 
     thread loopThread(loopFunc);

@@ -2,24 +2,45 @@
 #define GAME_ENGINE_H
 
 #include "room_system.hpp"
-#include "../ui/ui.h"
+#include "../ui/ui.hpp"
 #include "../models/character/player.hpp"
 #include "../models/character/monster.hpp"
 
 class GameEngine {
     public:
-        GameEngine(string player, int rows, int cols);
+        /**
+         * @brief Constructs a GameEngine object.
+         *
+         * @param playerName The name of the player.
+         * @param rows Number of rows in the game grid.
+         * @param cols Number of columns in the game grid.
+         */
+        GameEngine(string playerName, int rows, int cols);
+
+        /**
+         * @brief Destroys the GameEngine object.
+         */
         ~GameEngine();
-        void render(GtkApplication *app);
+
+        /**
+         * @brief Renders the game UI.
+         *
+         * @param app Pointer to the GtkApplication object.
+         */
+        void render(GtkApplication* app);
+
+        /**
+         * @brief Launches the game.
+         */
         void launch();
 
     private:
-        UI* ui;
-        RoomSystem* roomSys;
-        Player player;
-        Monster monster;
-        int rows;
-        int cols;
+        UI* ui;              
+        RoomSystem* roomSys;  
+        Player player;        
+        Monster monster;     
+        int rows;             
+        int cols; 
         Position enter;
         Position exit;
 };

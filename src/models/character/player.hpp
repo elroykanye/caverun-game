@@ -19,8 +19,11 @@ class Player: public Character {
         void updateHealth(int val);
         int getHealth() const;
         int getMoves() const;
+        int getTotalMoves() const;
         void setMoves(int moves);
         void setNextPosition(Position next);
+        bool isDone();
+        void setDone(bool done);
         Position sense(const Position &other, int x, int y) override;
         void move(const Position &next) override;
 
@@ -31,6 +34,7 @@ class Player: public Character {
         int health = 100;
         int moves = 2;
         int totalMoves = 0;
+        bool done = false;
         Position position;
         Position nextPosition;
 

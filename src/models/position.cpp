@@ -52,9 +52,11 @@ Vect Position::getVect() const { return this->vect; }
 
 bool Position::isOrigin() { return this->x == 0 && this->y == 0; }
 
-bool Position::equals(const Position &other) {
-    bool val = getX() == other.getX() && getY() == other.getY();
-    return val;
+bool Position::operator==(const Position& other) const {
+    return (x == other.getX()) && (y == other.getY());
+}
+bool Position::operator!=(const Position& other) const {
+    return !(*this == other);
 }
 
 Direction Position::getDirectionTo(const Position &other) {
@@ -77,24 +79,41 @@ Direction Position::getDirectionTo(const Position &other) {
 
 vector<Position> Position::getAdjacents(int maxX, int maxY) const {
     vector<Position> vec;
-    vec.reserve(4);
+    vec.reserve(8);
+
     if (getX() - 1 >= 0) {
         Position adj(getX() - 1, getY(), rows);
         vec.push_back(adj);
     }
-    if (getX() + 1  <= maxX) {
+    if (getX() + 1 <= maxX) {
         Position adj(getX() + 1, getY(), rows);
         vec.push_back(adj);
-
     }
-    if (getY() - 1  >= 0) {
+    if (getY() - 1 >= 0) {
         Position adj(getX(), getY() - 1, rows);
         vec.push_back(adj);
     }
-    if (getY() + 1  <= maxY) {
+    if (getY() + 1 <= maxY) {
         Position adj(getX(), getY() + 1, rows);
         vec.push_back(adj);
     }
+    if (getX() - 1 >= 0 && getY() - 1 >= 0) {
+        Position adj(getX() - 1, getY() - 1, rows);
+        vec.push_back(adj);
+    }
+    if (getX() - 1 >= 0 && getY() + 1 <= maxY) {
+        Position adj(getX() - 1, getY() + 1, rows);
+        vec.push_back(adj);
+    }
+    if (getX() + 1 <= maxX && getY() - 1 >= 0) {
+        Position adj(getX() + 1, getY() - 1, rows);
+        vec.push_back(adj);
+    }
+    if (getX() + 1 <= maxX && getY() + 1 <= maxY) {
+        Position adj(getX() + 1, getY() + 1, rows);
+        vec.push_back(adj);
+    }
+
     return vec;
 }
 double Position::distance(const Position &other) const {
@@ -120,7 +139,7 @@ Position Position::getShortestAdjacentTo(const Position &other, int maxX, int ma
     srand(time(NULL));
     int closest = rand() % distsAdjs[minDist].size();
     for (Position& adj: distsAdjs[minDist]) {
-        if (adj.equals(other)) return adj;
+        if (adj == other) return adj;
     }
     
     return distsAdjs[minDist][closest];

@@ -2,7 +2,7 @@
 
 TrapRoom::TrapRoom() {
     int moves = 1 + rand() % 10;
-    int value = (int) (1 + rand() % 10) * 2;
+    int value = (int) (1 + rand() % 10) * 2.5;
     damage = { moves, value };
 }
 

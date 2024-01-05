@@ -1,36 +1,27 @@
+.main {
+    padding: 8px;
+    background-color: rgb(54, 54, 54);
+}
 .btn {
     margin: 2px;
-}
-.normal-btn {
-    background-color: antiquewhite;
-}
-
-.poison-btn {
-    background-color: rgba(61, 192, 61, 0.661);
-}
-
-.trap-btn {
-    background-color: rgba(219, 46, 46, 0.599);
-}
-
-.bonus-btn {
-    background-color: #3535c9be;
-}
-
-
-.player-indicator {
+    padding: 4px;
     color:  black;
+    border-radius: 0;
 }
+.normal-btn { background-color: rgb(255, 203, 135); }
+.poison-btn { background-color: rgba(67, 144, 67, 0.498); }
+.trap-btn { background-color: rgba(189, 64, 64, 0.599); }
+.exit-btn { background-color: yellow; font-size: 10px; }
 
-.monster-indicator {
-    color: black;
-}
+.bonus-btn { background-color: #6666f27d; }
 
 .message {
     padding: 12px;
-    text-align: center;
+    margin: 2px;
+    font-weight: bold;
 }
-.message-danger { background-color: red; }
-.message-succes { background-color: green; }
-.message-primary { background-color: blue; }
-.message-warn { background-color: orange; }
+.message-box { border-radius: 4px;  }
+.message-danger { background-color: rgba(255, 0, 0, 0.175); }
+.message-succes { background-color: rgba(0, 128, 0, 0.175); }
+.message-primary { background-color: rgba(0, 0, 255, 0.175); }
+.message-warn { background-color: rgba(255, 252, 73, 0.385); }

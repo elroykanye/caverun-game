@@ -9,3 +9,11 @@ clang
 build-essential
 
 conan install . --output-folder=build --build=missing
+
+
+
+MAIN WINDOW
+    - main box (vertical)
+        -- topbar box (horizon)
+        -- grid box (a grid)
+        -- bottom bar box (horizon)

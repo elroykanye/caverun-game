@@ -12,9 +12,9 @@ Map::Map(int rows, int cols) {
     int lb = average - step;
     if (lb < 0) lb = 0;
     if (ub >= size && ub > 0) ub = size - 1;
-    int numberOfPoison = (rand() % (ub - lb + 1)) + lb + 1;
-    int numberOfTrap = (rand() % (ub - lb + 1)) + lb + 1;
-    int numberOfBonus = (int) ((rand() % (ub - lb + 1)) + lb) / 2;
+    int numberOfPoison = (int)((rand() % (ub - lb + 1)) + lb + 1) * 1.75;
+    int numberOfTrap = (int)((rand() % (ub - lb + 1)) + lb + 1) * 1.75;
+    int numberOfBonus = (int) ((rand() % (ub - lb + 1)) + lb) / 1.75;
     
     for (int yi = 0; yi < grid.size(); yi++) {
         for (int xi = 0; xi < grid[yi].size(); xi++) {
@@ -47,11 +47,13 @@ Map::Map(int rows, int cols) {
     this->size = size;
 };
 Map::~Map() {
+    /*
     for (const auto& row : grid) {
         for (RoomPtr room : row) {
-            //delete room;
+            delete room;
         }
     }
+    */
 }
 
 vector<vector<RoomPtr>> Map::getMap() { return grid; }

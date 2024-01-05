@@ -24,16 +24,16 @@ void Player::updateHealth(int val) {
 }
 int Player::getHealth() const { return health; }
 int Player::getMoves() const { return moves; }
+int Player::getTotalMoves() const { return totalMoves; }
 void Player::setMoves(int moves) { this->moves = moves; }
-void Player::setNextPosition(Position next) { 
-    nextPosition = next;
-}
-
+void Player::setNextPosition(Position next) {  nextPosition = next; }
+bool Player::isDone() { return done; }
+void Player::setDone(bool done) { this->done = done; }
 
 Position Player::sense(const Position &other, int x, int y) {
     vector<Position> adjs = position.getAdjacents(x, y);
     for (Position& adj: adjs) {
-        if (adj.equals(other)) return adj;
+        if (adj == other) return adj;
     }
     nextPosition = position;
     return position;
@@ -41,7 +41,7 @@ Position Player::sense(const Position &other, int x, int y) {
 
 void Player::move(const Position &next) {
     Position nextNC = const_cast<Position&>(next);
-    if (!nextNC.equals(position)) {
+    if (nextNC != position) {
         position.setX(next.getX());  
         position.setY(next.getY());
         this->moves--;
