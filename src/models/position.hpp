@@ -29,7 +29,7 @@ class Position {
         Vect getVect() const;
         bool isOrigin();
         void update(const Direction &direction);
-        void display();
+        void display() const;
         bool operator==(const Position &other) const;
         bool operator!=(const Position &other) const;
         double distance(const Position &other) const;
@@ -38,6 +38,8 @@ class Position {
         vector<Position> getAdjacents(int maxX, int maxY) const;
         // get the shortest adjacent position to the given position
         Position getShortestAdjacentTo(const Position &other, int maxX, int maxY) const;
+
+        static Position origin();
 
     private:
         int x = 0;

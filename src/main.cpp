@@ -6,7 +6,7 @@
 
 using namespace std;
 
-GameEngine engine("Elroy", 10, 10);
+GameEngine engine("Elroy", 4, 4);
 
 static void activate(GtkApplication *app, gpointer data) {
     engine.render(app);
@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
     app = gtk_application_new("com.group2.cave-escape", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
     status = g_application_run(G_APPLICATION(app), argc, argv);
+    cout << "Exiting with status: " << status << endl;
     g_object_unref(app);
     return EXIT_SUCCESS;
 }

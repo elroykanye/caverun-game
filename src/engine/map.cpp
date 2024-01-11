@@ -2,58 +2,11 @@
 
 Map::Map() {}
 Map::Map(int rows, int cols) {
-    srand (time(NULL));
-    grid.resize(rows, vector<RoomPtr>(cols));
-
-    int size = rows * cols;
-    int average = (int) (rows + cols) / 2;
-    int step = (int) average / 2;
-    int ub = average + step;
-    int lb = average - step;
-    if (lb < 0) lb = 0;
-    if (ub >= size && ub > 0) ub = size - 1;
-    int numberOfPoison = (int)((rand() % (ub - lb + 1)) + lb + 1) * 1.75;
-    int numberOfTrap = (int)((rand() % (ub - lb + 1)) + lb + 1) * 1.75;
-    int numberOfBonus = (int) ((rand() % (ub - lb + 1)) + lb) / 1.75;
-    
-    for (int yi = 0; yi < grid.size(); yi++) {
-        for (int xi = 0; xi < grid[yi].size(); xi++) {
-            RoomPtr room;
-            int roomType = rand() % average;
-            if (roomType == 0 && numberOfPoison > 0) { // poison
-                room = new PoisonRoom();
-                numberOfPoison--;
-            } else if (roomType == 1 && numberOfTrap > 0) { // trap
-                room = new TrapRoom();
-                numberOfTrap--;
-            } else if (roomType == 2 && numberOfBonus > 0) { // bonus
-                room = new BonusRoom();
-                numberOfBonus--;
-            } else {
-                room = new Room();
-            }
-            
-            Vect vect = { yi, xi };
-            Position pos(vect, grid.size());
-
-            if (pos.isOrigin()) {
-                room = new Room();
-            }
-
-            room->setPosition(pos);
-            grid[yi].at(xi) = room;
-        }
-    }
-    this->size = size;
+    this->rows = rows;
+    this->cols = cols;
+    this->resetRooms();
 };
 Map::~Map() {
-    /*
-    for (const auto& row : grid) {
-        for (RoomPtr room : row) {
-            delete room;
-        }
-    }
-    */
 }
 
 vector<vector<RoomPtr>> Map::getMap() { return grid; }
@@ -81,4 +34,53 @@ RoomPtr Map::getRoom(const Position &pos) {
         throw std::out_of_range("Index out of bounds");
     }
     return grid[row][col];
+}
+void Map::resetRooms() {
+    srand (time(NULL));
+    grid.resize(rows, vector<RoomPtr>(cols));
+
+    int size = rows * cols;
+    int average = (int) (rows + cols) / 2;
+    int step = (int) average / 2;
+    int ub = average + step;
+    int lb = average - step;
+    if (lb < 0) lb = 0;
+    if (ub >= size && ub > 0) ub = size - 1;
+    int numberOfPoison = (int)((rand() % (ub - lb + 1)) + lb + 1) * 1.75;
+    int numberOfTrap = (int)((rand() % (ub - lb + 1)) + lb + 1) * 1.75;
+    int numberOfBonus = (int) ((rand() % (ub - lb + 1)) + lb) / 1.75;
+    
+    for (int yi = 0; yi < grid.size(); yi++) {
+        for (int xi = 0; xi < grid[yi].size(); xi++) {
+            if (grid[yi][xi] != nullptr) {
+               delete grid[yi][xi];  // Delete the existing room to free memory
+            }
+            RoomPtr room;
+            int roomType = rand() % average;
+            if (roomType == 0 && numberOfPoison > 0) { // poison
+                room = new PoisonRoom();
+                numberOfPoison--;
+            } else if (roomType == 1 && numberOfTrap > 0) { // trap
+                room = new TrapRoom();
+                numberOfTrap--;
+            } else if (roomType == 2 && numberOfBonus > 0) { // bonus
+                room = new BonusRoom();
+                numberOfBonus--;
+            } else {
+                room = new Room();
+            }
+            
+            Vect vect = { yi, xi };
+            Position pos(vect, grid.size());
+
+            if (pos.isOrigin()) {
+                room = new Room();
+            }
+
+            room->setPosition(pos);
+            room->setVisited(false);
+            grid[yi].at(xi) = room;
+        }
+    }
+    this->size = size;
 }

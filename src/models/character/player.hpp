@@ -9,16 +9,18 @@ using namespace std;
 class Player: public Character {
     public:
         Player();
-        Player(string name, Position pos);
+        Player(const Position& pos);
         bool isPoisoned();
         string getHealthLabel();
         string getMovesLabel();
         string getNameLabel();
-        Position getPosition() const override;
+        string getName() const;
+        void setName(string name);
         Position getNextPosition() const;
         void updateHealth(int val);
         int getHealth() const;
         int getMoves() const;
+        long getScore(double boardsize) const;
         int getTotalMoves() const;
         void setMoves(int moves);
         void setNextPosition(Position next);
@@ -35,7 +37,7 @@ class Player: public Character {
         int moves = 2;
         int totalMoves = 0;
         bool done = false;
-        Position position;
+        //Position position;
         Position nextPosition;
 
     friend class Room;

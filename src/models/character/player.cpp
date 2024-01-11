@@ -1,12 +1,7 @@
 #include "player.hpp"
-
-Player::Player() {
-}
-
-Player::Player(string name, Position pos) {
-    position = pos;
-    nextPosition = pos;
-    name = name;
+Player::Player() {}
+Player::Player(const Position& pos): Character(pos), nextPosition(pos) {
+    
 }
 
 bool Player::isPoisoned() {
@@ -16,8 +11,14 @@ bool Player::isPoisoned() {
 string Player::getHealthLabel() { return "Health Points: " + to_string(health); }
 string Player::getMovesLabel() { return "Moves: " + to_string(moves); }
 string Player::getNameLabel() { return "Player: " + name; }
-Position Player::getPosition() const { return position; }
+
+string Player::getName() const { return this->name; }
+void Player::setName(string name) { this->name = name; }
 Position Player::getNextPosition() const { return nextPosition; }
+long Player::getScore(double boardsize) const {
+    if (totalMoves == 0) return 0;
+    return (long) (boardsize * boardsize * (health / 100)) / totalMoves;
+}
 void Player::updateHealth(int val) {
     health += val;
     if (health > 100) health = 100;

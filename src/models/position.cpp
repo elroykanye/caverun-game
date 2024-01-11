@@ -43,7 +43,7 @@ void Position::update(const Direction &direction) {
         default: break;
     }
 }
-void Position::display() {
+void Position::display() const {
     string str = "[x = " + to_string(x) + ", y = " + to_string(y) + ", i = " + to_string(vect.i) + ", j = " + to_string(vect.j) +  "]";
     cout << str << endl;
 }
@@ -143,4 +143,9 @@ Position Position::getShortestAdjacentTo(const Position &other, int maxX, int ma
     }
     
     return distsAdjs[minDist][closest];
+}
+
+
+Position Position::origin() {
+    return Position(0,0,0);
 }

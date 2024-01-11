@@ -2,11 +2,18 @@
 #define UI_H
 
 #include <gtk/gtk.h>
-
+#include <memory>
 #include "../engine/map.hpp"
 #include "../models/room/room.hpp"
 #include "../models/character/player.hpp"
 #include "../models/character/monster.hpp"
+
+using namespace std;
+
+struct GameContext {
+    Room* room;
+    Player* player;
+};
 
 class UI {
     public:
@@ -34,6 +41,8 @@ class UI {
          */
         void refresh();
 
+        void setup();
+
         /**
          * @brief Displays a message in the bottom bar.
          *
@@ -42,23 +51,35 @@ class UI {
          */
         void display(string message, Severity severity);
 
+        void displayScores(string content);
+
         /**
          * @brief Destroys the game window and the UI components.
          */
         void destroy();
 
+
+        GtkWidget* getStack();
+
         // Public member variables
         Player* player;           // Pointer to the player object
         Monster* monster;         // Pointer to the monster object
         Map* map;                 // Pointer to the map object
+        Position* enter;          // Pointer to the enter position object
         Position* exit;           // Pointer to the exit position object
 
     private:
         // Private member variables
+        vector<GameContext*> gameContexts;
+
+        GtkWidget* stack;
+        GtkWidget* stackSwitcher;
+
         GtkApplication* app;      
         GtkWidget* mainWindow;    
-        GtkWidget* mainBox;       
+        GtkWidget* gameBox;       
         GtkWidget* topBarBox;     
+        GtkWidget* messageBarBox;  
         GtkWidget* bottomBarBox;  
         GtkWidget* grid;          
         GtkWidget* playerLabel;   
@@ -66,8 +87,17 @@ class UI {
         GtkWidget* movesLabel;    
         GtkWidget* messageLabel;  
 
+        GtkWidget* welcomeBox;
+        GtkWidget* scoresLabel;
+        GtkWidget* scoresTextView;
+        GtkTextBuffer* scoresTextBuffer;
+
         int gridRows;             
         int gridCols;
+        bool initial;
+
+        void setupGameBox();
+        void setupWelcomeBox();
 };
 
 #endif

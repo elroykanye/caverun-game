@@ -22,10 +22,13 @@ class Map {
         vector<vector<RoomPtr>> getMap();
         vector<Room*> getFlatMap();
         RoomPtr getRoom(const Position &pos);
+        void resetRooms();
 
     private:
         vector<vector<RoomPtr>> grid;
         int size;
+        int rows;
+        int cols;
 };
 
 #endif

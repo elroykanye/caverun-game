@@ -2,6 +2,7 @@
 #define GAME_ENGINE_H
 
 #include "room_system.hpp"
+#include "score_board.hpp"
 #include "../ui/ui.hpp"
 #include "../models/character/player.hpp"
 #include "../models/character/monster.hpp"
@@ -34,9 +35,12 @@ class GameEngine {
          */
         void launch();
 
+        double getBoardSize() const;
+
     private:
         UI* ui;              
         RoomSystem* roomSys;  
+        ScoreBoard* scoreBoard;
         Player player;        
         Monster monster;     
         int rows;             

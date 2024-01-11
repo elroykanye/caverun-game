@@ -5,13 +5,18 @@
 
 class Character {
     public:
+        Character();
+        Character(const Position& pos);
         virtual Position sense(const Position &other, int x, int y);
         virtual void move(const Position &next);
         virtual void runTurn();
-        virtual Position getPosition() const;
+        Position getPosition() const;
+        void setPosition(const Position &position);
+        void resetPosition();
 
-    private:
+    protected:
         Position position;
+        Position original;
 };
 
 #endif // CHARACTER_H
