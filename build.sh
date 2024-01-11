@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ARG=$1
+mkdir ./build/
 rm ./build/main.css
 rm ./build/caverun
 cp ./src/styles/main.css ./build

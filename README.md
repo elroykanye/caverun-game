@@ -17,7 +17,7 @@ This game is a cave escape adventure where the player needs to navigate through 
 1. Build and run the game in one go using the helper script available in the source directory.
    - Linux: `./build.sh`
    Or directly execute the resulting binary:
-   - Linux: `./caverun`
+   - Linux: `./run.sh`
 2. The game window will open, and you can start playing.
 
 ## Gameplay Instructions
