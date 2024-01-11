@@ -1,19 +1,21 @@
 #!/bin/bash
 
 ARG=$1
+rm ./build/main.css
+rm ./build/caverun
+cp ./src/styles/main.css ./build
 
 conan install . --output-folder=build --build=missing
 cd build
-rm caverun
 cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
 cmake --build .
-cd ..
 
 if [ "$ARG" = "debug" ]
 then
-    gdb --directory="./src" ./build/caverun
+    gdb --directory="../src" ./caverun
 else
-    ./build/caverun
+    ./caverun
 fi
 
+cd ..
 echo "Thanks for playing?"

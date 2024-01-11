@@ -6,7 +6,7 @@
 
 using namespace std;
 
-GameEngine engine("Elroy", 4, 4);
+GameEngine engine("Vince", 7, 7);
 
 static void activate(GtkApplication *app, gpointer data) {
     engine.render(app);

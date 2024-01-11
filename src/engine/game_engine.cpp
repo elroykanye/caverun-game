@@ -11,7 +11,9 @@ GameEngine::GameEngine(string player, int rows = 6, int cols = 6) {
     this->exit = Position(cols - 1, rows - 1, rows);
     
     this->monster.setPosition(exit);
+    this->monster.setOriginalPosition(exit);
     this->player.setPosition(enter);
+    this->player.setOriginalPosition(enter);
     this->player.setName(player);
 }
 

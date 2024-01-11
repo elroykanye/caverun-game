@@ -10,94 +10,127 @@
 
 using namespace std;
 
+/**
+ * @brief Structure representing the game context containing the current room and player.
+ */
 struct GameContext {
-    Room* room;
-    Player* player;
+    Room* room;    // Pointer to the current room
+    Player* player;  // Pointer to the player
 };
 
+/**
+ * @brief The UI class represents the user interface for the game.
+ */
 class UI {
-    public:
-        /**
-         * @brief Constructs a UI object.
-         *
-         * @param app Pointer to the GtkApplication object.
-         * @param rows Number of rows in the grid.
-         * @param cols Number of columns in the grid.
-         */
-        UI(GtkApplication* app, int rows, int cols);
+public:
+    /**
+     * @brief Constructs a UI object.
+     *
+     * @param app Pointer to the GtkApplication object.
+     * @param rows Number of rows in the grid.
+     * @param cols Number of columns in the grid.
+     */
+    UI(GtkApplication* app, int rows, int cols);
 
-        /**
-         * @brief Destroys the UI object.
-         */
-        ~UI();
+    /**
+     * @brief Destroys the UI object.
+     */
+    ~UI();
 
-        /**
-         * @brief Initializes the game window and the UI components.
-         */
-        void init();
+    /**
+     * @brief Initializes the game window and the UI components.
+     */
+    void init();
 
-        /**
-         * @brief Updates the room colors based on player progress.
-         */
-        void refresh();
+    /**
+     * @brief Updates the room colors based on player progress.
+     *
+     * @param restart Flag indicating whether the game should be restarted.
+     */
+    void refresh(bool restart = false);
 
-        void setup();
+    /**
+     * @brief Sets up the game components.
+     */
+    void setup();
 
-        /**
-         * @brief Displays a message in the bottom bar.
-         *
-         * @param message The message to display.
-         * @param severity The severity level of the message.
-         */
-        void display(string message, Severity severity);
+    /**
+     * @brief Displays a message in the bottom bar.
+     *
+     * @param message The message to display.
+     * @param severity The severity level of the message.
+     */
+    void display(string message, Severity severity);
 
-        void displayScores(string content);
+    /**
+     * @brief Displays the scores in the UI.
+     *
+     * @param content The content to display.
+     */
+    void displayScores(string content);
 
-        /**
-         * @brief Destroys the game window and the UI components.
-         */
-        void destroy();
+    /**
+     * @brief Destroys the game window and the UI components.
+     */
+    void destroy();
 
+    /**
+     * @brief Displays the help information in the UI.
+     */
+    void displayHelp();
 
-        GtkWidget* getStack();
+    /**
+     * @brief Retrieves the stack widget.
+     *
+     * @return The stack widget.
+     */
+    GtkWidget* getStack();
 
-        // Public member variables
-        Player* player;           // Pointer to the player object
-        Monster* monster;         // Pointer to the monster object
-        Map* map;                 // Pointer to the map object
-        Position* enter;          // Pointer to the enter position object
-        Position* exit;           // Pointer to the exit position object
+    // Public member variables
+    Player* player;             // Pointer to the player object
+    Monster* monster;           // Pointer to the monster object
+    Map* map;                   // Pointer to the map object
+    Position* enter;            // Pointer to the enter position object
+    Position* exit;             // Pointer to the exit position object
+    vector<GameContext*> gameContexts;  // Vector of game contexts
 
-    private:
-        // Private member variables
-        vector<GameContext*> gameContexts;
+private:
+    // Private member variables
+    GtkWidget* stack;           // Stack widget
+    GtkWidget* stackSwitcher;   // Stack switcher widget
 
-        GtkWidget* stack;
-        GtkWidget* stackSwitcher;
+    GtkApplication* app;        // Pointer to the GtkApplication object
+    GtkWidget* mainWindow;      // Main window widget
+    GtkWidget* gameBox;         // Game box widget
+    GtkWidget* topBarBox;       // Top bar box widget
+    GtkWidget* messageBarBox;   // Message bar box widget
+    GtkWidget* bottomBarBox;    // Bottom bar box widget
+    GtkWidget* grid;            // Grid widget
+    GtkWidget* playerLabel;     // Player label widget
+    GtkWidget* healthLabel;     // Health label widget
+    GtkWidget* movesLabel;      // Moves label widget
+    GtkWidget* messageLabel;    // Message label widget
 
-        GtkApplication* app;      
-        GtkWidget* mainWindow;    
-        GtkWidget* gameBox;       
-        GtkWidget* topBarBox;     
-        GtkWidget* messageBarBox;  
-        GtkWidget* bottomBarBox;  
-        GtkWidget* grid;          
-        GtkWidget* playerLabel;   
-        GtkWidget* healthLabel;   
-        GtkWidget* movesLabel;    
-        GtkWidget* messageLabel;  
+    GtkWidget* welcomeBtnHelp;  // Welcome button for help
+    GtkWidget* welcomeBox;      // Welcome box widget
+    GtkWidget* scoresLabel;     // Scores label widget
+    GtkWidget* scoresTextView;  // Scores text view widget
+    GtkTextBuffer* scoresTextBuffer;  // Scores text buffer
 
-        GtkWidget* welcomeBox;
-        GtkWidget* scoresLabel;
-        GtkWidget* scoresTextView;
-        GtkTextBuffer* scoresTextBuffer;
+    int gridRows;               // Number of rows in the grid
+    int gridCols;               // Number of columns in the grid
 
-        int gridRows;             
-        int gridCols;
-        bool initial;
+    bool showHelp = false;      // Flag indicating whether help should be displayed
 
-        void setupGameBox();
-        void setupWelcomeBox();
+    /**
+     * @brief Sets up the game box.
+     */
+    void setupGameBox();
+
+    /**
+     * @brief Sets up the welcome box.
+     */
+    void setupWelcomeBox();
 };
 
-#endif
+#endif // UI_H

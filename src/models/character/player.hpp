@@ -22,6 +22,7 @@ class Player: public Character {
         int getMoves() const;
         long getScore(double boardsize) const;
         int getTotalMoves() const;
+        void setTotalMoves(int moves);
         void setMoves(int moves);
         void setNextPosition(Position next);
         bool isDone();
@@ -37,8 +38,6 @@ class Player: public Character {
         int moves = 2;
         int totalMoves = 0;
         bool done = false;
-        //Position position;
-        Position nextPosition;
 
     friend class Room;
 };

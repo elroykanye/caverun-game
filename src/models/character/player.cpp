@@ -1,6 +1,6 @@
 #include "player.hpp"
 Player::Player() {}
-Player::Player(const Position& pos): Character(pos), nextPosition(pos) {
+Player::Player(const Position& pos): Character(pos) {
     
 }
 
@@ -17,7 +17,7 @@ void Player::setName(string name) { this->name = name; }
 Position Player::getNextPosition() const { return nextPosition; }
 long Player::getScore(double boardsize) const {
     if (totalMoves == 0) return 0;
-    return (long) (boardsize * boardsize * (health / 100)) / totalMoves;
+    return (long) (boardsize * (health / 10)) / totalMoves;
 }
 void Player::updateHealth(int val) {
     health += val;
@@ -26,6 +26,7 @@ void Player::updateHealth(int val) {
 int Player::getHealth() const { return health; }
 int Player::getMoves() const { return moves; }
 int Player::getTotalMoves() const { return totalMoves; }
+void Player::setTotalMoves(int moves) { this->totalMoves = moves; }
 void Player::setMoves(int moves) { this->moves = moves; }
 void Player::setNextPosition(Position next) {  nextPosition = next; }
 bool Player::isDone() { return done; }

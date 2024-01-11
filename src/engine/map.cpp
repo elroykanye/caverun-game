@@ -4,38 +4,7 @@ Map::Map() {}
 Map::Map(int rows, int cols) {
     this->rows = rows;
     this->cols = cols;
-    this->resetRooms();
-};
-Map::~Map() {
-}
-
-vector<vector<RoomPtr>> Map::getMap() { return grid; }
-
-vector<Room*> Map::getFlatMap() {
-    vector<Room*> flatMap;
-    flatMap.resize(this->size);
-    int curr = 0;
-    for (int i = 0; i < grid.size(); i++) {
-        for (int j = 0; j < grid[i].size(); j++) {
-            flatMap.at(curr) = grid[i][j];
-            curr++;
-        }
-    }
-    return flatMap;
-}
-
-RoomPtr Map::getRoom(const Position &pos) {
-    int row = pos.getVect().j;
-    int col = pos.getVect().i;
-
-    if (row < 0 || row >= grid.size() || col < 0 || col >= grid[row].size()) {
-        // Index out of bounds, handle the error here
-        // For example, you can throw an exception or return a default room
-        throw std::out_of_range("Index out of bounds");
-    }
-    return grid[row][col];
-}
-void Map::resetRooms() {
+    
     srand (time(NULL));
     grid.resize(rows, vector<RoomPtr>(cols));
 
@@ -83,4 +52,42 @@ void Map::resetRooms() {
         }
     }
     this->size = size;
+};
+Map::~Map() {
+}
+
+vector<vector<RoomPtr>> Map::getMap() { return grid; }
+
+vector<Room*> Map::getFlatMap() {
+    vector<Room*> flatMap;
+    flatMap.resize(this->size);
+    int curr = 0;
+    for (int i = 0; i < grid.size(); i++) {
+        for (int j = 0; j < grid[i].size(); j++) {
+            flatMap.at(curr) = grid[i][j];
+            curr++;
+        }
+    }
+    return flatMap;
+}
+
+RoomPtr Map::getRoom(const Position &pos) {
+    int row = pos.getVect().j;
+    int col = pos.getVect().i;
+
+    if (row < 0 || row >= grid.size() || col < 0 || col >= grid[row].size()) {
+        // Index out of bounds, handle the error here
+        // For example, you can throw an exception or return a default room
+        throw std::out_of_range("Index out of bounds");
+    }
+    return grid[row][col];
+}
+void Map::resetRooms() {
+    for (int yi = 0; yi < grid.size(); yi++) {
+        for (int xi = 0; xi < grid[yi].size(); xi++) {
+            if (grid[yi][xi] != nullptr) {
+               grid[yi][xi]->setVisited(false);
+            }
+        }
+    }
 }

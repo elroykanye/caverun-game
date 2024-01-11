@@ -21,12 +21,11 @@ void UI::init() {
     gtk_window_set_default_size(GTK_WINDOW(mainWindow), 1024, 720);
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
-    gtk_css_provider_load_from_path(cssProvider, "./src/styles/main.css");
+    gtk_css_provider_load_from_path(cssProvider, "main.css");
     gtk_style_context_add_provider_for_display(gdk_display_get_default(), GTK_STYLE_PROVIDER(cssProvider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     g_signal_connect(mainWindow, "destroy", G_CALLBACK(+[](GtkWidget* widget, gpointer data) {
         UI* ui = static_cast<UI*>(data);
-        cout << "\n\n\nSOMEBAISNDIANSIDNASIND\n\n\n" << endl;
     }), NULL);  
 
     this->setupWelcomeBox();
@@ -98,10 +97,11 @@ void UI::setupGameBox() {
         UI* ui = static_cast<UI*>(data);
         ui->map->resetRooms();
         ui->player->setMoves(2);
+        ui->player->setTotalMoves(0);
         ui->player->setDone(false);
-        ui->player->setPosition(*(ui->enter));
-        ui->monster->setPosition(*(ui->exit));
-        ui->refresh();
+        ui->player->resetPosition();
+        ui->monster->resetPosition();
+        ui->refresh(true);
     }), this);
 
     gtk_box_append(GTK_BOX(gameBox), topBarBox);
@@ -120,11 +120,14 @@ void UI::setupWelcomeBox() {
 
     GtkWidget* welcomeBtnBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 16);
     GtkWidget* welcomeBtnStart = gtk_button_new();
-    GtkWidget* welcomeBtnHelp = gtk_button_new();
+    welcomeBtnHelp = gtk_button_new();
     gtk_button_set_label(GTK_BUTTON(welcomeBtnStart), "Start");
     gtk_button_set_label(GTK_BUTTON(welcomeBtnHelp), "Help");
     gtk_box_append(GTK_BOX(welcomeBtnBox), welcomeBtnStart);
     gtk_box_append(GTK_BOX(welcomeBtnBox), welcomeBtnHelp);
+
+    gtk_widget_set_hexpand(welcomeBtnStart, TRUE);
+    gtk_widget_set_vexpand(welcomeBtnHelp, TRUE);
 
     GtkWidget* scoresBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
     scoresTextView = gtk_text_view_new();
@@ -144,14 +147,19 @@ void UI::setupWelcomeBox() {
     gtk_widget_set_halign(welcomeBox, GTK_ALIGN_CENTER);
     gtk_widget_set_halign(welcomeLabelBox, GTK_ALIGN_CENTER);
 
-    g_signal_connect(welcomeBtnStart, "clicked", G_CALLBACK(+[](GtkWidget* widget, gpointer data){
+    g_signal_connect(welcomeBtnStart, "clicked", G_CALLBACK(+[](GtkWidget* widget, gpointer data) {
         UI* ui = static_cast<UI*>(data);
         GtkWidget* stack = ui->getStack();
         gtk_stack_set_visible_child_name(GTK_STACK(stack), "stackGame");
     }), this);
+
+    g_signal_connect(welcomeBtnHelp, "clicked", G_CALLBACK(+[](GtkWidget* widget, gpointer data) {
+        UI* ui = static_cast<UI*>(data);   
+        ui->displayHelp();
+    }), this);
 }
 
-void UI::refresh() {
+void UI::refresh(bool restart) {
     for (int i = 0; i < gridRows; i++) {
         for (int j = 0; j < gridCols; j++) {
             Vect vect = {i, j};
@@ -160,9 +168,10 @@ void UI::refresh() {
             Room* room = map->getRoom(pos);
             string roomType  = "";
             
-            initial = false;
+            bool initial = false;
             GtkWidget* button;
             GtkWidget* existingButton = gtk_grid_get_child_at(GTK_GRID(grid), i, j);
+
             if (existingButton == nullptr) {
                 initial = true;
                 button = gtk_button_new();
@@ -224,12 +233,13 @@ void UI::refresh() {
             }
 
 
-            if (initial) {
+            if (initial || restart) {
                 GameContext* gameContext = new GameContext{room, player};
                 g_signal_connect(button, "clicked", G_CALLBACK(+[](GtkWidget* widget, gpointer data) {
                     GameContext* context = static_cast<GameContext*>(data);
-                    if (context->player->getMoves() > 0)
+                    if (context->player->getMoves() > 0) {
                         context->player->setNextPosition(context->room->getPosition());
+                    }
                 }), gameContext);
 
                 gameContexts.push_back(std::move(gameContext));
@@ -256,7 +266,28 @@ void UI::display(string message, Severity severity = Severity::PRIMARY) {
 }
 
 void UI::displayScores(string content) {
-    gtk_label_set_text(GTK_LABEL(scoresLabel), content.c_str());
+    if (!showHelp) {
+        gtk_label_set_text(GTK_LABEL(scoresLabel), content.c_str());
+    }
+}
+
+void UI::displayHelp() {
+    showHelp = !showHelp;
+    string labelText = "";
+    string buttonText = "";
+    if (showHelp) {
+        labelText = "1. Escape from the cave by reaching the top-right corner.\n"
+                    "2. Avoid the malicious monster (marked as 'M') in the cave.\n"
+                    "3. You start in the bottom-left corner (marked as 'P').\n"
+                    "4. Move through normal rooms without losing health points.\n"
+                    "5. Watch out for poisonous and trap rooms that decrease health points.";
+        buttonText = "High Scores";
+    } else {
+        labelText = "";
+        buttonText = "Help";
+    }
+    gtk_label_set_text(GTK_LABEL(scoresLabel), labelText.c_str());
+    gtk_button_set_label(GTK_BUTTON(welcomeBtnHelp), buttonText.c_str());
 }
 
 void UI::destroy() {
